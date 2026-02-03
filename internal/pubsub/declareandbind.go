@@ -36,7 +36,8 @@ func DeclareAndBind(
 		exclusive = true
 	}
 
-
+	argsTable := make(amqp.Table)
+	argsTable["x-dead-letter-exchange"] = "peril_dlx"
 
 	q, err := newChan.QueueDeclare(
 		queueName,
@@ -44,7 +45,7 @@ func DeclareAndBind(
 		autoDelete,
 		exclusive,
 		false,
-		nil,
+		argsTable,
 	)
 	if err != nil {
 		return nil, amqp.Queue{}, err

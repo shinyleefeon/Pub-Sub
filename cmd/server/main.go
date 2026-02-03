@@ -40,13 +40,20 @@ func main() {
 	
 
 
-	ch, q, err := pubsub.DeclareAndBind(a, routing.ExchangePerilTopic, routing.GameLogSlug, (routing.GameLogSlug + ".*"), pubsub.Durable)
+	/*ch, q, err := pubsub.DeclareAndBind(a, routing.ExchangePerilTopic, routing.GameLogSlug, (routing.GameLogSlug + ".*"), pubsub.Durable)
 	if err != nil {
 		fmt.Println("Failed to declare and bind queue:", err)
 		return
 	}
 	defer ch.Close()
-	fmt.Println("Queue declared and bound successfully:", q.Name)
+	fmt.Println("Queue declared and bound successfully:", q.Name) */
+
+	err = pubsub.SubscribeGob(a, routing.ExchangePerilTopic, routing.GameLogSlug, routing.GameLogSlug+".*", pubsub.Durable, LogHandler())
+	if err != nil {
+		fmt.Println("Failed to subscribe to GameLog messages:", err)
+		return
+	}
+	fmt.Println("Subscribed to GameLog messages successfully")
 
 
 	gamelogic.PrintServerHelp()
